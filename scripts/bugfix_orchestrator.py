@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+from scripts.codex_worker import load_worker_report
+
 REQUIRED_TASK_KEYS = [
     'id',
     'title',
@@ -115,6 +117,32 @@ def initialize_task_run(base_dir: Path, task: dict, context_text: str) -> Path:
     write_task_state(run_dir, task['id'], 'created')
     append_timeline_event(run_dir, task['id'], 'created')
     return run_dir
+
+
+def run_checker_preflight(run_dir: Path) -> dict:
+    reasons = []
+    patch_path = run_dir / 'patch.diff'
+    test_report_path = run_dir / 'test-report.txt'
+    worker_report_path = run_dir / 'worker-report.json'
+
+    if not patch_path.exists() or not patch_path.read_text().strip():
+        reasons.append('patch.diff is empty')
+
+    if not test_report_path.exists():
+        reasons.append('test-report.txt is missing')
+
+    if not worker_report_path.exists():
+        reasons.append('worker-report.json is missing')
+    else:
+        try:
+            load_worker_report(worker_report_path)
+        except ValueError as err:
+            reasons.append(f'worker-report.json invalid: {err}')
+
+    if reasons:
+        return {'status': 'review_retry', 'reasons': reasons}
+
+    return {'status': 'review_passed', 'reasons': []}
 
 
 def build_worktree_add_command(repo_path: str, worktree_path: str, branch_name: str) -> list[str]:

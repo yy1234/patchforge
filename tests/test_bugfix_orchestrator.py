@@ -68,5 +68,66 @@ class WorktreeCommandTests(unittest.TestCase):
         )
 
 
+class CheckerPreflightTests(unittest.TestCase):
+    def test_rejects_empty_diff(self):
+        from scripts.bugfix_orchestrator import run_checker_preflight
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            (run_dir / 'patch.diff').write_text('')
+            (run_dir / 'test-report.txt').write_text('passed')
+            (run_dir / 'worker-report.json').write_text(json.dumps({
+                'taskId': 'bugfix-001',
+                'status': 'passed',
+                'reproduced': True,
+                'filesChanged': ['src/a.py'],
+                'testCommand': 'pytest -q',
+                'testExitCode': 0,
+                'risks': [],
+                'summary': 'ok',
+            }))
+
+            result = run_checker_preflight(run_dir)
+            self.assertEqual(result['status'], 'review_retry')
+            self.assertIn('patch.diff is empty', result['reasons'])
+
+    def test_rejects_missing_test_report(self):
+        from scripts.bugfix_orchestrator import run_checker_preflight
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            (run_dir / 'patch.diff').write_text('diff --git a/foo b/foo')
+            (run_dir / 'worker-report.json').write_text(json.dumps({
+                'taskId': 'bugfix-001',
+                'status': 'passed',
+                'reproduced': True,
+                'filesChanged': ['src/a.py'],
+                'testCommand': 'pytest -q',
+                'testExitCode': 0,
+                'risks': [],
+                'summary': 'ok',
+            }))
+
+            result = run_checker_preflight(run_dir)
+            self.assertEqual(result['status'], 'review_retry')
+            self.assertIn('test-report.txt is missing', result['reasons'])
+
+    def test_rejects_invalid_worker_report(self):
+        from scripts.bugfix_orchestrator import run_checker_preflight
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            (run_dir / 'patch.diff').write_text('diff --git a/foo b/foo')
+            (run_dir / 'test-report.txt').write_text('passed')
+            (run_dir / 'worker-report.json').write_text(json.dumps({
+                'taskId': 'bugfix-001',
+                'status': 'passed',
+            }))
+
+            result = run_checker_preflight(run_dir)
+            self.assertEqual(result['status'], 'review_retry')
+            self.assertTrue(any(reason.startswith('worker-report.json invalid:') for reason in result['reasons']))
+
+
 if __name__ == '__main__':
     unittest.main()

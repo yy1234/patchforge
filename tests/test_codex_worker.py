@@ -48,5 +48,51 @@ class WorkerReportTests(unittest.TestCase):
             self.assertEqual(report['status'], 'passed')
 
 
+class WorkerWatchdogTests(unittest.TestCase):
+    def test_classifies_timeout_as_retryable(self):
+        from scripts.codex_worker import classify_worker_run
+
+        outcome = classify_worker_run(exit_code=124, timed_out=True, stalled=False, artifacts_present=['worker-report.json'])
+
+        self.assertEqual(outcome['status'], 'timeout')
+        self.assertTrue(outcome['retryable'])
+
+    def test_classifies_stall_as_retryable(self):
+        from scripts.codex_worker import classify_worker_run
+
+        outcome = classify_worker_run(exit_code=None, timed_out=False, stalled=True, artifacts_present=[])
+
+        self.assertEqual(outcome['status'], 'stalled')
+        self.assertTrue(outcome['retryable'])
+
+    def test_classifies_missing_artifacts_as_retryable(self):
+        from scripts.codex_worker import classify_worker_run
+
+        outcome = classify_worker_run(exit_code=0, timed_out=False, stalled=False, artifacts_present=['worker-report.json'])
+
+        self.assertEqual(outcome['status'], 'artifact_missing')
+        self.assertTrue(outcome['retryable'])
+
+    def test_classifies_success_when_required_artifacts_exist(self):
+        from scripts.codex_worker import classify_worker_run
+
+        outcome = classify_worker_run(
+            exit_code=0,
+            timed_out=False,
+            stalled=False,
+            artifacts_present=['worker-report.json', 'patch.diff', 'test-report.txt', 'notes.md'],
+        )
+
+        self.assertEqual(outcome['status'], 'passed')
+        self.assertFalse(outcome['retryable'])
+
+    def test_caps_retries_for_retryable_failures(self):
+        from scripts.codex_worker import should_retry_worker
+
+        self.assertTrue(should_retry_worker({'retryable': True}, attempt_count=1, max_retries=2))
+        self.assertFalse(should_retry_worker({'retryable': True}, attempt_count=2, max_retries=2))
+        self.assertFalse(should_retry_worker({'retryable': False}, attempt_count=0, max_retries=2))
+
+
 if __name__ == '__main__':
     unittest.main()
