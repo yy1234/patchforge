@@ -1,0 +1,12 @@
+[
+  {
+    "id": "sample-app",
+    "repoPath": "/path/to/sample-app",
+    "testCommand": "pytest -q",
+    "keywords": [
+      "sample app",
+      "sample-app",
+      "white screen"
+    ]
+  }
+]
