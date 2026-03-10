@@ -1,4 +1,6 @@
 runs/bugfix/*
 !runs/bugfix/.gitkeep
+runs/tasks/*
+!runs/tasks/.gitkeep
 tmp-test-runs/
 __pycache__/

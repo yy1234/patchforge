@@ -39,6 +39,11 @@ def normalize_mail_task(message: dict, registry: list[dict]) -> dict:
         'rawFrom': message.get('from'),
         'taskType': classify_task_type(subject, body),
         'bugDescription': body,
+        'repoPath': matched_project['repoPath'] if matched_project else '',
+        'reproSteps': [],
+        'expectedBehavior': '',
+        'testCommand': matched_project['testCommand'] if matched_project else '',
+        'doneDefinition': ['Triaged from email'],
         'repoCandidate': matched_project['id'] if matched_project else None,
         'needsUserInput': matched_project is None,
     }

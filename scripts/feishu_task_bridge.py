@@ -51,3 +51,7 @@ def render_commander_message(
         )
 
     raise ValueError(f'Unsupported commander event: {event}')
+
+
+def reply_matches_task(reply: dict, task_id: str, session_id: Optional[str]) -> bool:
+    return reply.get('taskId') == task_id and reply.get('sessionId') == session_id

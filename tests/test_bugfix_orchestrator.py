@@ -129,5 +129,50 @@ class CheckerPreflightTests(unittest.TestCase):
             self.assertTrue(any(reason.startswith('worker-report.json invalid:') for reason in result['reasons']))
 
 
+class TaskResumeFlowTests(unittest.TestCase):
+    def test_resumes_task_from_matching_reply(self):
+        from scripts.bugfix_orchestrator import initialize_task_run, resume_task_from_reply
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            task = {
+                'id': 'bugfix-001',
+                'title': 'Fix sample bug',
+                'repoPath': '/tmp/repo',
+                'bugDescription': 'Sample',
+                'reproSteps': ['pytest test_sample.py -q'],
+                'expectedBehavior': 'Passes',
+                'testCommand': 'pytest test_sample.py -q',
+                'doneDefinition': ['tests pass'],
+            }
+
+            run_dir = initialize_task_run(base_dir, task, 'extra context')
+            state_path = run_dir / 'state.json'
+            state = json.loads(state_path.read_text())
+            state.update({
+                'status': 'awaiting_user',
+                'sessionId': 'feishu-dm-001',
+                'missingItems': ['环境地址'],
+            })
+            state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n')
+
+            resumed = resume_task_from_reply(
+                run_dir,
+                {
+                    'taskId': 'bugfix-001',
+                    'sessionId': 'feishu-dm-001',
+                    'message': '测试环境地址是 https://env.example.com',
+                },
+            )
+
+            updated_state = json.loads(state_path.read_text())
+            timeline = (run_dir / 'timeline.jsonl').read_text().strip().splitlines()
+
+            self.assertEqual(resumed['status'], 'queued')
+            self.assertEqual(updated_state['status'], 'queued')
+            self.assertIn('测试环境地址是 https://env.example.com', (run_dir / 'context.md').read_text())
+            self.assertEqual(json.loads(timeline[-1])['status'], 'queued')
+
+
 if __name__ == '__main__':
     unittest.main()

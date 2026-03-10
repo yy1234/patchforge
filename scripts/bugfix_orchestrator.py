@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from scripts.codex_worker import load_worker_report
+from scripts.feishu_task_bridge import reply_matches_task
 
 REQUIRED_TASK_KEYS = [
     'id',
@@ -89,6 +90,15 @@ def write_task_files(run_dir: Path, task: dict, context_text: str) -> None:
 
 
 def write_task_state(run_dir: Path, task_id: str, status: str) -> dict:
+    return write_task_state_with_metadata(run_dir, task_id, status)
+
+
+def write_task_state_with_metadata(
+    run_dir: Path,
+    task_id: str,
+    status: str,
+    metadata: Optional[dict] = None,
+) -> dict:
     if status not in VALID_TASK_STATES:
         raise ValueError(f'Unsupported task status: {status}')
 
@@ -97,6 +107,8 @@ def write_task_state(run_dir: Path, task_id: str, status: str) -> dict:
         'status': status,
         'updatedAt': datetime.now(timezone.utc).isoformat(),
     }
+    if metadata:
+        state.update(metadata)
     (run_dir / 'state.json').write_text(json.dumps(state, ensure_ascii=False, indent=2) + '\n')
     return state
 
@@ -117,6 +129,39 @@ def initialize_task_run(base_dir: Path, task: dict, context_text: str) -> Path:
     write_task_state(run_dir, task['id'], 'created')
     append_timeline_event(run_dir, task['id'], 'created')
     return run_dir
+
+
+def read_task_state(run_dir: Path) -> dict:
+    return json.loads((run_dir / 'state.json').read_text())
+
+
+def resume_task_from_reply(run_dir: Path, reply: dict) -> dict:
+    task = json.loads((run_dir / 'task.json').read_text())
+    state = read_task_state(run_dir)
+
+    if state['status'] != 'awaiting_user':
+        raise ValueError('Task is not waiting for user input')
+
+    if not reply_matches_task(reply, task['id'], state.get('sessionId')):
+        raise ValueError('Reply does not match task context')
+
+    context_path = run_dir / 'context.md'
+    context_text = context_path.read_text().rstrip()
+    reply_text = reply.get('message', '').strip()
+    context_path.write_text(f'{context_text}\n\nUser reply:\n{reply_text}\n')
+
+    next_state = write_task_state_with_metadata(
+        run_dir,
+        task['id'],
+        'queued',
+        metadata={
+            'sessionId': state.get('sessionId'),
+            'lastUserReply': reply_text,
+            'missingItems': [],
+        },
+    )
+    append_timeline_event(run_dir, task['id'], 'queued')
+    return next_state
 
 
 def run_checker_preflight(run_dir: Path) -> dict:
