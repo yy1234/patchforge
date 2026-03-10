@@ -2,9 +2,9 @@
 
 ## 目标
 
-V0 目标是跑通一个本地优先的最小任务闭环：
+V0 目标是跑通一个本地优先的最小任务闭环（当前先跳过邮箱）：
 
-- 从阿里企业邮箱读取任务邮件
+- 从飞书私聊手动贴禅道链接触发
 - 映射到本地项目
 - 在隔离 worktree 中交给 Codex 执行
 - 缺信息时通过飞书私聊追问用户
@@ -21,9 +21,13 @@ V0 目标是跑通一个本地优先的最小任务闭环：
 - `scripts/feishu_task_bridge.py`
   负责 Commander 发给飞书私聊的消息格式
 - `scripts/run_mail_task_loop.py`
-  负责 mailbox 配置加载、轮询入口和 dry-run
+  负责 mailbox 配置加载、轮询入口和 dry-run（当前未接入）
+- `scripts/zentao_intake.py`
+  负责从飞书私聊文本中提取禅道链接并标准化任务
+- `scripts/feishu_trigger.py`
+  负责手动触发入口的任务创建与状态更新
 
-## 必需环境变量
+## 必需环境变量（邮箱接入时）
 
 真实邮箱接入前至少需要：
 
@@ -68,7 +72,15 @@ V0 假设只有一个主交互通道：飞书私聊机器人。
 - 飞书桥接当前只负责文案，不直接发消息
 - IMAP runner 当前只提供 dry-run 和依赖注入入口
 
-## Dry Run 方式
+## 手动触发方式
+
+飞书私聊触发时，用户贴入禅道链接，例如：
+
+`禅道: https://zentao.example.com/bug-view-321.html`
+
+触发后任务状态会进入 `awaiting_user`，待补齐 `项目名` 等必要信息。
+
+## Dry Run 方式（邮箱通道）
 
 ```bash
 cd /Users/yangyang/Documents/patchforge/email-feishu-codex-task-loop

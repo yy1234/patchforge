@@ -135,6 +135,21 @@ def read_task_state(run_dir: Path) -> dict:
     return json.loads((run_dir / 'state.json').read_text())
 
 
+def mark_task_awaiting_user(run_dir: Path, session_id: str, missing_items: list[str]) -> dict:
+    task = json.loads((run_dir / 'task.json').read_text())
+    next_state = write_task_state_with_metadata(
+        run_dir,
+        task['id'],
+        'awaiting_user',
+        metadata={
+            'sessionId': session_id,
+            'missingItems': missing_items,
+        },
+    )
+    append_timeline_event(run_dir, task['id'], 'awaiting_user')
+    return next_state
+
+
 def resume_task_from_reply(run_dir: Path, reply: dict) -> dict:
     task = json.loads((run_dir / 'task.json').read_text())
     state = read_task_state(run_dir)

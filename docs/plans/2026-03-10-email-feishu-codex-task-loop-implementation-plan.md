@@ -12,6 +12,7 @@
 - Task 6: deterministic checker preflight
 - Task 7: resume task after matching Feishu reply
 - Task 8: IMAP loop runner with dry-run entry
+- Task 10: manual Feishu trigger (ZenTao link intake)
 
 ## 验证命令
 
@@ -43,6 +44,6 @@ python3 -m unittest \
 
 ## rollout 建议
 
-1. 先只跑 `--dry-run`
-2. 再接真实 IMAP，但只输出 task，不触发 Codex
-3. 最后再接真实 Codex 和飞书回复恢复流
+1. 先只启用飞书私聊手动贴链接触发
+2. 再接真实 Codex 和飞书回复恢复流
+3. 邮箱接入放到后续阶段
