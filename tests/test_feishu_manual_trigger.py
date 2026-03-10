@@ -27,6 +27,7 @@ class FeishuManualTriggerTests(unittest.TestCase):
             self.assertIn("项目名", state["missingItems"])
             self.assertEqual(task["zentaoUrl"], "https://zentao.example.com/bug-view-321.html")
             self.assertEqual(json.loads(timeline[-1])["status"], "awaiting_user")
+            self.assertIn("需要你补充信息", result["responseMessage"])
 
 
 if __name__ == "__main__":
