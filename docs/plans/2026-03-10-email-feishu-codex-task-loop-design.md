@@ -55,6 +55,19 @@ V0 假设只有一个主交互通道：飞书私聊机器人。
 - 用户回复中会带可关联的任务上下文
 - Commander 以 `taskId + sessionId` 关联恢复中的任务
 
+## 当前接线方式
+
+当前真实接线优先复用已存在的 OpenClaw Feishu websocket 通道，不在这个仓库里重复实现 Feishu webhook 服务。
+
+桥接链路是：
+
+- OpenClaw gateway 的 `feishu` channel 接收私聊消息
+- OpenClaw workspace skill `zentao-trigger` 识别禅道链接触发条件
+- skill 进入本仓库目录后执行 `python3 -m scripts.feishu_trigger`
+- 脚本输出 JSON，其中 `responseMessage` 作为会话内回复返回给用户
+
+这样 Feishu 的收发仍然由现有 OpenClaw 集成负责，这个仓库只负责任务标准化、run 目录、状态流转和回复文案。
+
 ## 首次生产 rollout 限制
 
 第一版只建议这样用：

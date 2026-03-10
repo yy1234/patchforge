@@ -1,0 +1,1169 @@
+{
+  "version": 1,
+  "roots": [
+    {
+      "id": "gmis",
+      "path": "/Volumes/data_apfs/gmis",
+      "description": "iOS 原生宿主 + Flutter 混合项目目录"
+    },
+    {
+      "id": "flutterProject",
+      "path": "/Volumes/data_apfs/flutterProject",
+      "description": "以纯 Flutter app 为主，混有 package / module / 其他目录"
+    }
+  ],
+  "projects": [
+    {
+      "id": "gmis_flutter_3_0",
+      "name": "gmis_flutter_3.0",
+      "displayName": "Igmis Sx Flutter",
+      "aliases": [
+        "gmis_flutter_3.0",
+        "gmis_flutter",
+        "Igmis Sx Flutter"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/gmis_flutter_3.0",
+      "keywords": [
+        "gmis_flutter_3.0",
+        "gmis_flutter",
+        "Igmis Sx Flutter"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        ".ios/Runner/AppDelegate.m",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": ".ios/Runner/AppDelegate.m"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "gmis_ks_flutter",
+      "name": "gmis_ks_flutter",
+      "displayName": "igmis_ks_flutter",
+      "aliases": [
+        "gmis_ks_flutter",
+        "igmis_ks_flutter",
+        "ks_flutter"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/gmis_ks_flutter",
+      "keywords": [
+        "gmis_ks_flutter",
+        "igmis_ks_flutter",
+        "ks_flutter"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        ".ios/Runner/AppDelegate.m",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": ".ios/Runner/AppDelegate.m"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "gmis_sx_flutter",
+      "name": "gmis_sx_flutter",
+      "displayName": "Igmis Sx Flutter",
+      "aliases": [
+        "gmis_sx_flutter",
+        "igmis_sx_flutter",
+        "sx_flutter",
+        "Igmis Sx Flutter"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/gmis_sx_flutter",
+      "keywords": [
+        "gmis_sx_flutter",
+        "igmis_sx_flutter",
+        "sx_flutter",
+        "Igmis Sx Flutter"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        ".ios/Runner/AppDelegate.m",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": ".ios/Runner/AppDelegate.m"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "igmis_hx",
+      "name": "花溪焚烧监管",
+      "displayName": "花溪焚烧监管",
+      "aliases": [
+        "igmis_hx",
+        "花溪焚烧监管",
+        "花溪监管"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "ios_host",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/igmis_hx",
+      "keywords": [
+        "igmis_hx",
+        "花溪焚烧监管",
+        "花溪监管"
+      ],
+      "hotPaths": [
+        "igmis_hx.xcworkspace",
+        "igmis_hx.xcodeproj",
+        "igmis_hx",
+        "igmis_hx_unibest",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "igmis_hx.xcworkspace",
+        "iosProject": "igmis_hx.xcodeproj"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace igmis_hx.xcworkspace -scheme igmis_hx -sdk iphonesimulator build"
+      },
+      "notes": "目录下同时存在 igmis_hx_unibest 子工程，需人工确认 bug 落点。"
+    },
+    {
+      "id": "igmis_ns",
+      "name": "南沙监管平台",
+      "displayName": "南沙监管平台",
+      "aliases": [
+        "igmis_ns",
+        "南沙监管平台",
+        "南沙监管"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "ios_host",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/igmis_ns",
+      "keywords": [
+        "igmis_ns",
+        "南沙监管平台",
+        "南沙监管"
+      ],
+      "hotPaths": [
+        "igmis_ns.xcworkspace",
+        "igmis_ns.xcodeproj",
+        "igmis_ns",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "igmis_ns.xcworkspace",
+        "iosProject": "igmis_ns.xcodeproj"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace igmis_ns.xcworkspace -scheme igmis_ns -sdk iphonesimulator build"
+      }
+    },
+    {
+      "id": "igmis_nt",
+      "name": "南通环卫监管",
+      "displayName": "南通环卫监管",
+      "aliases": [
+        "igmis_nt",
+        "南通环卫监管",
+        "南通监管"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "ios_host",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/igmis_nt",
+      "keywords": [
+        "igmis_nt",
+        "南通环卫监管",
+        "南通监管"
+      ],
+      "hotPaths": [
+        "igmis_nt.xcworkspace",
+        "igmis_nt.xcodeproj",
+        "igmis_nt",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "igmis_nt.xcworkspace",
+        "iosProject": "igmis_nt.xcodeproj"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace igmis_nt.xcworkspace -scheme igmis_nt -sdk iphonesimulator build"
+      }
+    },
+    {
+      "id": "igmis_sx",
+      "name": "绍兴环卫监管",
+      "displayName": "绍兴环卫监管",
+      "aliases": [
+        "igmis_sx",
+        "绍兴环卫监管",
+        "绍兴监管",
+        "sx"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "hybrid",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/igmis_sx",
+      "keywords": [
+        "igmis_sx",
+        "绍兴环卫监管",
+        "绍兴监管",
+        "sx"
+      ],
+      "hotPaths": [
+        "igmis_sx/AppDelegate.swift",
+        "igmis_sx",
+        "igmis_sx.xcworkspace",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "igmis_sx.xcworkspace",
+        "iosProject": "igmis_sx.xcodeproj",
+        "appDelegate": "igmis_sx/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "app_delegate",
+        "file": "igmis_sx/AppDelegate.swift",
+        "notes": "loginAddress/serverAddress 在 AppDelegate.swift 中切换"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace igmis_sx.xcworkspace -scheme igmis_sx -sdk iphonesimulator build"
+      }
+    },
+    {
+      "id": "igmis_xa",
+      "name": "西安环卫监管",
+      "displayName": "西安环卫监管",
+      "aliases": [
+        "igmis_xa",
+        "西安环卫监管",
+        "西安监管",
+        "xa"
+      ],
+      "rootId": "gmis",
+      "role": "app",
+      "projectType": "hybrid",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/gmis/igmis_xa",
+      "keywords": [
+        "igmis_xa",
+        "西安环卫监管",
+        "西安监管",
+        "xa"
+      ],
+      "hotPaths": [
+        "igmis_xa/Other/AppDelegate.swift",
+        "igmis_xa",
+        "igmis_xa.xcworkspace",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "igmis_xa.xcworkspace",
+        "iosProject": "igmis_xa.xcodeproj",
+        "appDelegate": "igmis_xa/Other/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "app_delegate",
+        "file": "igmis_xa/Other/AppDelegate.swift"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace igmis_xa.xcworkspace -scheme igmis_xa -sdk iphonesimulator build"
+      }
+    },
+    {
+      "id": "common_3_24_5",
+      "name": "common_3.24.5",
+      "displayName": null,
+      "aliases": [
+        "common_3.24.5",
+        "common"
+      ],
+      "rootId": "flutterProject",
+      "role": "package",
+      "projectType": "flutter_package",
+      "matchEnabled": false,
+      "rootPath": "/Volumes/data_apfs/flutterProject/common_3.24.5",
+      "keywords": [
+        "common_3.24.5",
+        "common",
+        "基础组件"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml"
+      },
+      "env": {
+        "switchStrategy": "not_applicable"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "file_gallery_3_24_5",
+      "name": "file_gallery_3.24.5",
+      "displayName": null,
+      "aliases": [
+        "file_gallery_3.24.5",
+        "file_gallery"
+      ],
+      "rootId": "flutterProject",
+      "role": "package",
+      "projectType": "flutter_package",
+      "matchEnabled": false,
+      "rootPath": "/Volumes/data_apfs/flutterProject/file_gallery_3.24.5",
+      "keywords": [
+        "file_gallery_3.24.5",
+        "file_gallery"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml"
+      },
+      "env": {
+        "switchStrategy": "not_applicable"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "know_ledget",
+      "name": "Know Ledget",
+      "displayName": "Know Ledget",
+      "aliases": [
+        "know_ledget",
+        "Know Ledget"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/know_ledget",
+      "keywords": [
+        "know_ledget",
+        "Know Ledget"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "lib",
+        "ios/Runner",
+        "macos/Runner/AppDelegate.swift",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "mis_gd_group_flutter_3_0",
+      "name": "Snmis Group Flutter",
+      "displayName": "Snmis Group Flutter",
+      "aliases": [
+        "mis_gd_group_flutter_3.0",
+        "mis_gd_group_flutter",
+        "snmis_group_flutter"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/mis_gd_group_flutter_3.0",
+      "keywords": [
+        "mis_gd_group_flutter_3.0",
+        "mis_gd_group_flutter",
+        "snmis_group_flutter"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        ".ios/Runner/AppDelegate.m",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": ".ios/Runner/AppDelegate.m"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "mis_hbhd",
+      "name": "华源电力",
+      "displayName": "华源电力",
+      "aliases": [
+        "mis_hbhd",
+        "华源电力"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/mis_hbhd",
+      "keywords": [
+        "mis_hbhd",
+        "华源电力"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "mis_hg_group",
+      "name": "华光环能",
+      "displayName": "华光环能",
+      "aliases": [
+        "mis_hg_group",
+        "华光环能",
+        "mishg"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/mis_hg_group",
+      "keywords": [
+        "mis_hg_group",
+        "华光环能",
+        "mishg"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "pf_top_bkjt_3_0",
+      "name": "浦发管控平台",
+      "displayName": "浦发管控平台",
+      "aliases": [
+        "pf_top_bkjt_3.0",
+        "pf_top_bkjt",
+        "浦发管控平台"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/pf_top_bkjt_3.0",
+      "keywords": [
+        "pf_top_bkjt_3.0",
+        "pf_top_bkjt",
+        "浦发管控平台"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_bjsg",
+      "name": "北京首钢",
+      "displayName": "北京首钢",
+      "aliases": [
+        "snmis_bjsg",
+        "北京首钢"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_bjsg",
+      "keywords": [
+        "snmis_bjsg",
+        "北京首钢"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_bkjt",
+      "name": "北控集团",
+      "displayName": "北控集团",
+      "aliases": [
+        "snmis_bkjt",
+        "北控集团"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_bkjt",
+      "keywords": [
+        "snmis_bkjt",
+        "北控集团"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_cspx_3_0",
+      "name": "长沙二期",
+      "displayName": "长沙二期",
+      "aliases": [
+        "snmis_cspx_3.0",
+        "snmis_cspx",
+        "长沙二期"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_cspx_3.0",
+      "keywords": [
+        "snmis_cspx_3.0",
+        "snmis_cspx",
+        "长沙二期"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "xy_material",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_czsg_3_24_5",
+      "name": "首钢生物质",
+      "displayName": "首钢生物质",
+      "aliases": [
+        "snmis_czsg_3.24.5",
+        "snmis_czsg",
+        "首钢生物质"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_czsg_3.24.5",
+      "keywords": [
+        "snmis_czsg_3.24.5",
+        "snmis_czsg",
+        "首钢生物质"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "assets",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_dktd",
+      "name": "洞口泰达",
+      "displayName": "洞口泰达",
+      "aliases": [
+        "snmis_dktd",
+        "洞口泰达"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_dktd",
+      "keywords": [
+        "snmis_dktd",
+        "洞口泰达"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "xy_material",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_fxzjn",
+      "name": "肥西中节能",
+      "displayName": "肥西中节能",
+      "aliases": [
+        "snmis_fxzjn",
+        "肥西中节能"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_fxzjn",
+      "keywords": [
+        "snmis_fxzjn",
+        "肥西中节能"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_group",
+      "name": "智慧生产管控",
+      "displayName": "智慧生产管控",
+      "aliases": [
+        "snmis_group",
+        "智慧生产管控",
+        "XYMis"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "hybrid",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_group",
+      "keywords": [
+        "snmis_group",
+        "智慧生产管控",
+        "XYMis"
+      ],
+      "hotPaths": [
+        "XYMis/AppDelegate.m",
+        "XYMis",
+        "XYMis.xcworkspace",
+        "Podfile"
+      ],
+      "entrypoints": {
+        "iosWorkspace": "XYMis.xcworkspace",
+        "iosProject": "XYMis.xcodeproj",
+        "appDelegate": "XYMis/AppDelegate.m"
+      },
+      "env": {
+        "switchStrategy": "app_delegate",
+        "file": "XYMis/AppDelegate.m"
+      },
+      "commands": {
+        "bootstrap": "pod install",
+        "test": "xcodebuild -workspace XYMis.xcworkspace -scheme XYMis -sdk iphonesimulator build"
+      }
+    },
+    {
+      "id": "snmis_hugan",
+      "name": "清洁发电管控平台",
+      "displayName": "清洁发电管控平台",
+      "aliases": [
+        "snmis_hugan",
+        "清洁发电管控平台",
+        "生产管理"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_hugan",
+      "keywords": [
+        "snmis_hugan",
+        "清洁发电管控平台",
+        "生产管理"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "build-tools",
+        "tools",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_kg",
+      "name": "比什凯克",
+      "displayName": "比什凯克",
+      "aliases": [
+        "snmis_kg",
+        "比什凯克"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_kg",
+      "keywords": [
+        "snmis_kg",
+        "比什凯克"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "xy_material",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_lyjx",
+      "name": "浏阳生产管理",
+      "displayName": "浏阳生产管理",
+      "aliases": [
+        "snmis_lyjx",
+        "浏阳生产管理"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_lyjx",
+      "keywords": [
+        "snmis_lyjx",
+        "浏阳生产管理"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "xy_material",
+        "build-tools",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_pjjx",
+      "name": "军信平江",
+      "displayName": "军信平江",
+      "aliases": [
+        "snmis_pjjx",
+        "军信平江"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_pjjx",
+      "keywords": [
+        "snmis_pjjx",
+        "军信平江"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "xy_material",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_shpfbh",
+      "name": "上海浦发",
+      "displayName": "上海浦发",
+      "aliases": [
+        "snmis_shpfbh",
+        "上海浦发"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_shpfbh",
+      "keywords": [
+        "snmis_shpfbh",
+        "上海浦发"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_wxhl",
+      "name": "智惠联",
+      "displayName": "智惠联",
+      "aliases": [
+        "snmis_wxhl",
+        "智惠联"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_wxhl",
+      "keywords": [
+        "snmis_wxhl",
+        "智惠联"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "assets",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_wxhl_3_0",
+      "name": "智惠联",
+      "displayName": "智惠联",
+      "aliases": [
+        "snmis_wxhl_3.0",
+        "snmis_wxhl",
+        "智惠联"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_wxhl_3.0",
+      "keywords": [
+        "snmis_wxhl_3.0",
+        "snmis_wxhl",
+        "智惠联"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "assets",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_yq_3_0",
+      "name": "永清",
+      "displayName": "永清",
+      "aliases": [
+        "snmis_yq_3.0",
+        "snmis_yq",
+        "永清"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_yq_3.0",
+      "keywords": [
+        "snmis_yq_3.0",
+        "snmis_yq",
+        "永清"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    },
+    {
+      "id": "snmis_yztd_ticket_3_0",
+      "name": "扬州工作票",
+      "displayName": "扬州工作票",
+      "aliases": [
+        "snmis_yztd_ticket_3.0",
+        "snmis_yztd_ticket",
+        "扬州工作票"
+      ],
+      "rootId": "flutterProject",
+      "role": "app",
+      "projectType": "flutter_app",
+      "matchEnabled": true,
+      "rootPath": "/Volumes/data_apfs/flutterProject/snmis_yztd_ticket_3.0",
+      "keywords": [
+        "snmis_yztd_ticket_3.0",
+        "snmis_yztd_ticket",
+        "扬州工作票"
+      ],
+      "hotPaths": [
+        "pubspec.yaml",
+        "ios/Runner/AppDelegate.swift",
+        "lib",
+        "test"
+      ],
+      "entrypoints": {
+        "pubspec": "pubspec.yaml",
+        "appDelegate": "ios/Runner/AppDelegate.swift"
+      },
+      "env": {
+        "switchStrategy": "unknown"
+      },
+      "commands": {
+        "bootstrap": "flutter pub get",
+        "test": "flutter test"
+      }
+    }
+  ],
+  "notes": [
+    "name 优先使用禅道或业务侧可见的 App 名；无法确认时暂用目录名。",
+    "aliases 和 keywords 用于自动匹配禅道标题、描述和飞书消息。",
+    "hotPaths 只放高价值入口，不放 Pods、build、DerivedData、.dart_tool 等噪音目录。",
+    "matchEnabled=false 的 package 不参与自动项目匹配，只作为依赖参考。",
+    "当前仍是第一版保守初始化；无法确认的项目可继续补充更准确的业务名、别名和关键词。"
+  ]
+}

@@ -20,7 +20,8 @@ then run the local trigger script and reply with its response.
 Use the sender id as `session-id` when available; if not, use any stable per-user id.
 
 ```bash
-python3 scripts/feishu_trigger.py --text "<original message>" --session-id "<sender_id>"
+cd /Users/yangyang/Documents/patchforge/email-feishu-codex-task-loop && \
+python3 -m scripts.feishu_trigger --text "<original message>" --session-id "<sender_id>"
 ```
 
 The script prints JSON with `responseMessage`. Reply with that text verbatim.

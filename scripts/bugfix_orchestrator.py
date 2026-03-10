@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
@@ -35,6 +36,7 @@ VALID_TASK_STATES = {
     'needs_human',
     'done',
 }
+ASCII_KEYWORD_PATTERN = re.compile(r'^[a-z0-9_.-]+$')
 
 
 def ensure_run_layout(base_dir: Path, task_id: str) -> Path:
@@ -58,15 +60,63 @@ def validate_project_entry(entry: dict) -> None:
         raise ValueError('Project keywords cannot be empty')
 
 
+def normalize_project_entry(entry: dict) -> dict:
+    if 'repoPath' in entry and 'testCommand' in entry:
+        normalized = dict(entry)
+        normalized['keywords'] = list(dict.fromkeys(entry.get('keywords', [])))
+        return normalized
+
+    root_path = entry.get('rootPath')
+    commands = entry.get('commands') or {}
+    aliases = entry.get('aliases') or []
+
+    keywords = []
+    for value in [entry.get('name'), *aliases, *(entry.get('keywords') or [])]:
+        if isinstance(value, str) and value.strip():
+            keywords.append(value.strip())
+
+    normalized = {
+        'id': entry['id'],
+        'repoPath': root_path or '',
+        'testCommand': commands.get('test', ''),
+        'keywords': list(dict.fromkeys(keywords)),
+    }
+    normalized.update(entry)
+    normalized['repoPath'] = root_path or normalized['repoPath']
+    normalized['testCommand'] = commands.get('test', normalized['testCommand'])
+    normalized['keywords'] = list(dict.fromkeys(keywords))
+    return normalized
+
+
 def load_project_registry(path: Path) -> list[dict]:
-    registry = json.loads(path.read_text())
-    if not isinstance(registry, list):
-        raise ValueError('Project registry must be a list')
+    raw = json.loads(path.read_text())
+    if isinstance(raw, list):
+        registry = raw
+    elif isinstance(raw, dict) and isinstance(raw.get('projects'), list):
+        registry = [
+            normalize_project_entry(entry)
+            for entry in raw['projects']
+            if entry.get('role') == 'app' and entry.get('matchEnabled', True)
+        ]
+    else:
+        raise ValueError('Project registry must be a list or an object with a projects list')
 
     for entry in registry:
         validate_project_entry(entry)
 
     return registry
+
+
+def keyword_matches(keyword: str, haystack: str) -> bool:
+    normalized = keyword.strip().lower()
+    if not normalized:
+        return False
+
+    if ASCII_KEYWORD_PATTERN.fullmatch(normalized):
+        pattern = rf'(?<![a-z0-9_]){re.escape(normalized)}(?![a-z0-9_])'
+        return re.search(pattern, haystack) is not None
+
+    return normalized in haystack
 
 
 def match_project(subject: str, body: str, registry: list[dict]) -> Optional[dict]:
@@ -75,7 +125,7 @@ def match_project(subject: str, body: str, registry: list[dict]) -> Optional[dic
     best_score = 0
 
     for entry in registry:
-        score = sum(1 for keyword in entry['keywords'] if keyword.lower() in haystack)
+        score = sum(1 for keyword in entry['keywords'] if keyword_matches(keyword, haystack))
         if score > best_score:
             best_match = entry
             best_score = score

@@ -20,6 +20,28 @@ class ZentaoIntakeTests(unittest.TestCase):
         self.assertEqual(task["source"], "feishu")
         self.assertTrue(task["needsUserInput"])
 
+    def test_normalizes_task_with_matched_project_from_text(self):
+        from scripts.zentao_intake import normalize_zentao_task
+
+        registry = [
+            {
+                'id': 'igmis-sx',
+                'repoPath': '/repos/igmis_sx',
+                'testCommand': 'xcodebuild test',
+                'keywords': ['绍兴环卫监管', 'igmis_sx', 'sx'],
+            }
+        ]
+
+        task = normalize_zentao_task(
+            "禅道: https://zentao.example.com/bug-view-321.html 绍兴环卫监管登录白屏",
+            registry=registry,
+        )
+
+        self.assertEqual(task["repoCandidate"], "igmis-sx")
+        self.assertEqual(task["repoPath"], "/repos/igmis_sx")
+        self.assertEqual(task["testCommand"], "xcodebuild test")
+        self.assertFalse(task["needsUserInput"])
+
 
 if __name__ == "__main__":
     unittest.main()
