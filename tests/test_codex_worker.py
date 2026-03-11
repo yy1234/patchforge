@@ -20,6 +20,28 @@ class WorkerPromptTests(unittest.TestCase):
         self.assertIn('Write worker-report.json', prompt)
         self.assertIn('pytest -q', prompt)
 
+    def test_writes_prompt_file_with_run_directory_context(self):
+        from scripts.codex_worker import write_worker_prompt
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            prompt_path = write_worker_prompt(
+                run_dir=run_dir,
+                task={
+                    'id': 'bugfix-001',
+                    'bugDescription': 'Fix sample',
+                    'testCommand': 'pytest -q',
+                    'doneDefinition': ['tests pass'],
+                },
+                context_text='extra context',
+                worktree_path='/tmp/worktree',
+            )
+
+            prompt = prompt_path.read_text()
+            self.assertEqual(prompt_path, run_dir / 'prompt.md')
+            self.assertIn(str(run_dir), prompt)
+            self.assertIn('/tmp/worktree', prompt)
+
 
 class WorkerCommandTests(unittest.TestCase):
     def test_build_codex_command(self):
@@ -27,6 +49,43 @@ class WorkerCommandTests(unittest.TestCase):
         cmd = build_codex_command('/repo/worktree', '/runs/bugfix-001/prompt.md')
         self.assertEqual(cmd[:3], ['codex', '--add-dir', '/repo/worktree'])
         self.assertEqual(cmd[-1], '/runs/bugfix-001/prompt.md')
+
+    def test_executes_worker_command_and_collects_artifacts(self):
+        from scripts.codex_worker import execute_codex_worker
+
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp)
+            for name in ['worker-report.json', 'patch.diff', 'test-report.txt', 'notes.md']:
+                (run_dir / name).write_text('ok')
+
+            calls = []
+
+            def fake_exec(cmd, cwd, capture_output, text, timeout):
+                calls.append((cmd, cwd, capture_output, text, timeout))
+
+                class Result:
+                    returncode = 0
+
+                return Result()
+
+            result = execute_codex_worker(
+                run_dir=run_dir,
+                task={
+                    'id': 'bugfix-001',
+                    'bugDescription': 'Fix sample',
+                    'testCommand': 'pytest -q',
+                    'doneDefinition': ['tests pass'],
+                },
+                context_text='extra context',
+                worktree_path='/tmp/worktree',
+                exec_runner=fake_exec,
+            )
+
+            self.assertEqual(result['exit_code'], 0)
+            self.assertFalse(result['timed_out'])
+            self.assertFalse(result['stalled'])
+            self.assertIn('worker-report.json', result['artifacts_present'])
+            self.assertEqual(calls[0][1], str(run_dir))
 
 
 class WorkerReportTests(unittest.TestCase):

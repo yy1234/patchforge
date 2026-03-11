@@ -1,5 +1,6 @@
 import hashlib
 import re
+import uuid
 from typing import Optional
 
 from scripts.bugfix_orchestrator import match_project
@@ -20,11 +21,17 @@ def build_zentao_task_id(url: str) -> str:
     return f"zentao-task-{digest}"
 
 
+def build_zentao_run_id(url: str) -> str:
+    return f"{build_zentao_task_id(url)}-run-{uuid.uuid4().hex[:8]}"
+
+
 def normalize_zentao_task(text: str, registry: Optional[list[dict]] = None) -> dict:
     url = extract_zentao_link(text) or ""
     matched_project = match_project(text, text, registry or []) if registry else None
+    source_task_id = build_zentao_task_id(url)
     return {
-        "id": build_zentao_task_id(url),
+        "id": build_zentao_run_id(url),
+        "sourceTaskId": source_task_id,
         "source": "feishu",
         "title": "Zentao task",
         "zentaoUrl": url,

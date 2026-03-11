@@ -174,5 +174,87 @@ class TaskResumeFlowTests(unittest.TestCase):
             self.assertEqual(json.loads(timeline[-1])['status'], 'queued')
 
 
+class QueueControlTests(unittest.TestCase):
+    def test_queues_fourth_ready_run_when_capacity_is_full(self):
+        from scripts.bugfix_orchestrator import initialize_task_run, maybe_queue_run
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            for idx in range(3):
+                task = {
+                    'id': f'bugfix-{idx}',
+                    'sourceTaskId': f'source-{idx}',
+                    'title': 'Fix sample bug',
+                    'repoPath': '/tmp/repo',
+                    'bugDescription': 'Sample',
+                    'reproSteps': ['pytest test_sample.py -q'],
+                    'expectedBehavior': 'Passes',
+                    'testCommand': 'pytest test_sample.py -q',
+                    'doneDefinition': ['tests pass'],
+                }
+                run_dir = initialize_task_run(base_dir, task, 'extra context')
+                (run_dir / 'state.json').write_text(json.dumps({
+                    'taskId': task['id'],
+                    'status': 'created',
+                    'updatedAt': '2026-03-11T00:00:00+00:00',
+                }, ensure_ascii=False, indent=2) + '\n')
+
+            queued_task = {
+                'id': 'bugfix-queued',
+                'sourceTaskId': 'source-queued',
+                'title': 'Fix sample bug',
+                'repoPath': '/tmp/repo',
+                'bugDescription': 'Sample',
+                'reproSteps': ['pytest test_sample.py -q'],
+                'expectedBehavior': 'Passes',
+                'testCommand': 'pytest test_sample.py -q',
+                'doneDefinition': ['tests pass'],
+            }
+            queued_run_dir = initialize_task_run(base_dir, queued_task, 'extra context')
+
+            state = maybe_queue_run(
+                base_dir,
+                queued_run_dir,
+                queued_task,
+                session_id='feishu-dm-001',
+                target_status='created',
+            )
+
+            self.assertEqual(state['status'], 'queued')
+            self.assertEqual(state['queuedForStatus'], 'created')
+            self.assertEqual(state['sessionId'], 'feishu-dm-001')
+
+    def test_promotes_oldest_queued_run_when_capacity_is_available(self):
+        from scripts.bugfix_orchestrator import initialize_task_run, promote_next_queued_run
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            task = {
+                'id': 'bugfix-queued',
+                'sourceTaskId': 'source-queued',
+                'title': 'Fix sample bug',
+                'repoPath': '/tmp/repo',
+                'bugDescription': 'Sample',
+                'reproSteps': ['pytest test_sample.py -q'],
+                'expectedBehavior': 'Passes',
+                'testCommand': 'pytest test_sample.py -q',
+                'doneDefinition': ['tests pass'],
+            }
+            run_dir = initialize_task_run(base_dir, task, 'extra context')
+            (run_dir / 'state.json').write_text(json.dumps({
+                'taskId': task['id'],
+                'status': 'queued',
+                'queuedForStatus': 'created',
+                'sessionId': 'feishu-dm-001',
+                'updatedAt': '2026-03-11T00:00:00+00:00',
+            }, ensure_ascii=False, indent=2) + '\n')
+
+            promoted = promote_next_queued_run(base_dir)
+            updated_state = json.loads((run_dir / 'state.json').read_text())
+
+            self.assertEqual(promoted['taskId'], 'bugfix-queued')
+            self.assertEqual(updated_state['status'], 'created')
+
+
 if __name__ == '__main__':
     unittest.main()

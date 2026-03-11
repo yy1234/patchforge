@@ -61,6 +61,74 @@ class FeishuManualTriggerTests(unittest.TestCase):
             self.assertIn("开始处理任务", result["responseMessage"])
             self.assertNotIn("需要你补充信息", result["responseMessage"])
 
+    def test_reuses_active_run_for_same_bug_and_session(self):
+        from scripts.feishu_trigger import handle_feishu_trigger
+
+        registry = [
+            {
+                'id': 'igmis-sx',
+                'repoPath': '/repos/igmis_sx',
+                'testCommand': 'xcodebuild test',
+                'keywords': ['绍兴环卫监管', 'igmis_sx', 'sx'],
+            }
+        ]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            first = handle_feishu_trigger(
+                "禅道: https://zentao.example.com/bug-view-321.html 绍兴环卫监管登录白屏",
+                registry=registry,
+                base_dir=base_dir,
+                session_id="feishu-dm-001",
+            )
+            second = handle_feishu_trigger(
+                "禅道: https://zentao.example.com/bug-view-321.html 不对，把按钮文案改成B",
+                registry=registry,
+                base_dir=base_dir,
+                session_id="feishu-dm-001",
+            )
+
+            self.assertEqual(first["runDir"], second["runDir"])
+            run_dir = Path(first["runDir"])
+            context = (run_dir / "context.md").read_text()
+            self.assertIn("把按钮文案改成B", context)
+
+    def test_queues_fourth_distinct_ready_run(self):
+        from scripts.feishu_trigger import handle_feishu_trigger
+
+        registry = [
+            {
+                'id': 'snmis-bjsg',
+                'repoPath': '/repos/snmis_bjsg',
+                'testCommand': 'flutter test',
+                'keywords': ['北京首钢'],
+            }
+        ]
+
+        urls = [
+            'https://zentao.example.com/bug-view-101.html',
+            'https://zentao.example.com/bug-view-102.html',
+            'https://zentao.example.com/bug-view-103.html',
+            'https://zentao.example.com/bug-view-104.html',
+        ]
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            results = []
+            for url in urls:
+                results.append(handle_feishu_trigger(
+                    f"禅道: {url} 北京首钢登录白屏",
+                    registry=registry,
+                    base_dir=base_dir,
+                    session_id="feishu-dm-001",
+                ))
+
+            queued_run = Path(results[-1]["runDir"])
+            state = json.loads((queued_run / "state.json").read_text())
+
+            self.assertEqual(state["status"], "queued")
+            self.assertIn("已进入队列", results[-1]["responseMessage"])
+
 
 if __name__ == "__main__":
     unittest.main()

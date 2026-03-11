@@ -32,6 +32,26 @@ def render_commander_message(
             f'当前阶段：{status}'
         )
 
+    if event == 'task_queued':
+        return (
+            f'任务已进入队列\n'
+            f'任务ID：{task_id}\n'
+            f'标题：{title}\n'
+            f'项目：{repo}\n'
+            f'当前阶段：{status}\n'
+            f'说明：{note or "等待空闲槽位"}'
+        )
+
+    if event == 'task_retrying':
+        return (
+            f'任务需要重试\n'
+            f'任务ID：{task_id}\n'
+            f'标题：{title}\n'
+            f'项目：{repo}\n'
+            f'当前阶段：{status}\n'
+            f'说明：{note or "等待下一次处理"}'
+        )
+
     if event == 'blocked_backend':
         return (
             f'需要后端联调\n'

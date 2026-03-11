@@ -42,6 +42,16 @@ class ZentaoIntakeTests(unittest.TestCase):
         self.assertEqual(task["testCommand"], "xcodebuild test")
         self.assertFalse(task["needsUserInput"])
 
+    def test_same_zentao_link_gets_stable_source_task_id_but_unique_run_id(self):
+        from scripts.zentao_intake import normalize_zentao_task
+
+        first = normalize_zentao_task("禅道: https://zentao.example.com/bug-view-321.html")
+        second = normalize_zentao_task("禅道: https://zentao.example.com/bug-view-321.html")
+
+        self.assertEqual(first["sourceTaskId"], second["sourceTaskId"])
+        self.assertNotEqual(first["id"], second["id"])
+        self.assertTrue(first["id"].startswith(first["sourceTaskId"]))
+
 
 if __name__ == "__main__":
     unittest.main()

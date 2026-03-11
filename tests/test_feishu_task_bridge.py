@@ -71,6 +71,40 @@ class FeishuTaskBridgeTests(unittest.TestCase):
         self.assertIn('任务处理完成', message)
         self.assertIn('局部测试已通过', message)
 
+    def test_renders_queue_message(self):
+        from scripts.feishu_task_bridge import render_commander_message
+
+        message = render_commander_message(
+            event='task_queued',
+            task={
+                'id': 'mail-task-001',
+                'title': 'Fix white screen',
+                'repoCandidate': 'sample-app',
+            },
+            state={'status': 'queued'},
+            note='前方还有 1 个任务',
+        )
+
+        self.assertIn('已进入队列', message)
+        self.assertIn('前方还有 1 个任务', message)
+
+    def test_renders_retry_message(self):
+        from scripts.feishu_task_bridge import render_commander_message
+
+        message = render_commander_message(
+            event='task_retrying',
+            task={
+                'id': 'mail-task-001',
+                'title': 'Fix white screen',
+                'repoCandidate': 'sample-app',
+            },
+            state={'status': 'review_retry'},
+            note='checker 未通过，准备重试',
+        )
+
+        self.assertIn('任务需要重试', message)
+        self.assertIn('checker 未通过', message)
+
 
 if __name__ == '__main__':
     unittest.main()
