@@ -19,6 +19,23 @@ class FeishuTaskBridgeTests(unittest.TestCase):
         self.assertIn('mail-task-001', message)
         self.assertIn('sample-app', message)
 
+    def test_renders_task_started_message_with_note(self):
+        from scripts.feishu_task_bridge import render_commander_message
+
+        message = render_commander_message(
+            event='task_started',
+            task={
+                'id': 'mail-task-001',
+                'title': 'Fix white screen',
+                'repoCandidate': 'sample-app',
+            },
+            state={'status': 'created'},
+            note='检测到当前为生产环境，执行前将切到 test',
+        )
+
+        self.assertIn('开始处理任务', message)
+        self.assertIn('检测到当前为生产环境，执行前将切到 test', message)
+
     def test_renders_missing_info_message(self):
         from scripts.feishu_task_bridge import render_commander_message
 
@@ -104,6 +121,23 @@ class FeishuTaskBridgeTests(unittest.TestCase):
 
         self.assertIn('任务需要重试', message)
         self.assertIn('checker 未通过', message)
+
+    def test_renders_blocked_message(self):
+        from scripts.feishu_task_bridge import render_commander_message
+
+        message = render_commander_message(
+            event='task_blocked',
+            task={
+                'id': 'mail-task-001',
+                'title': 'Fix white screen',
+                'repoCandidate': 'sample-app',
+            },
+            state={'status': 'needs_human'},
+            note='项目路径不存在：/missing/repo',
+        )
+
+        self.assertIn('当前无法自动处理', message)
+        self.assertIn('项目路径不存在', message)
 
 
 if __name__ == '__main__':

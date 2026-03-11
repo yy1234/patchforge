@@ -42,6 +42,35 @@ class WorkerPromptTests(unittest.TestCase):
             self.assertIn(str(run_dir), prompt)
             self.assertIn('/tmp/worktree', prompt)
 
+    def test_prompt_includes_runtime_rules_guidance(self):
+        from scripts.codex_worker import render_worker_prompt
+
+        prompt = render_worker_prompt(
+            task={
+                'id': 'bugfix-001',
+                'bugDescription': 'Fix sample',
+                'testCommand': 'pytest -q',
+                'doneDefinition': ['tests pass'],
+                'runtimeRules': {
+                    'entryFile': 'lib/app/app.dart',
+                    'currentEnvironment': 'prod',
+                    'preferredEnvironment': 'test',
+                    'switchRequired': True,
+                    'defaultUsername': 'root',
+                    'hasDefaultPassword': True,
+                    'credentialPolicy': 'remarks -> local default',
+                    'backendRequiredWhenBlocked': ['后端接口地址', '鉴权方式'],
+                },
+            },
+            context_text='extra context',
+        )
+
+        self.assertIn('Runtime guidance', prompt)
+        self.assertIn('lib/app/app.dart', prompt)
+        self.assertIn('prod', prompt)
+        self.assertIn('test', prompt)
+        self.assertIn('remarks -> local default', prompt)
+
 
 class WorkerCommandTests(unittest.TestCase):
     def test_build_codex_command(self):

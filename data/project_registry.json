@@ -482,20 +482,25 @@
       "hotPaths": [
         "pubspec.yaml",
         "ios/Runner/AppDelegate.swift",
+        "lib/app/app.dart",
         "lib",
         "test"
       ],
       "entrypoints": {
         "pubspec": "pubspec.yaml",
-        "appDelegate": "ios/Runner/AppDelegate.swift"
+        "appDelegate": "ios/Runner/AppDelegate.swift",
+        "flutterApp": "lib/app/app.dart"
       },
       "env": {
-        "switchStrategy": "unknown"
+        "switchStrategy": "flutter_app_dart",
+        "file": "lib/app/app.dart",
+        "accountSource": "remarks_preferred"
       },
       "commands": {
         "bootstrap": "flutter pub get",
         "test": "flutter test"
-      }
+      },
+      "notes": "项目切换入口在 lib/app/app.dart。优先从备注中读取账号信息；如需后端联调，先完成前端可做部分，再向人工请求所需后端信息。"
     },
     {
       "id": "mis_hg_group",

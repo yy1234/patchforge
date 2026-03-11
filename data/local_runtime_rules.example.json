@@ -1,0 +1,226 @@
+{
+  "version": 1,
+  "projects": {
+    "igmis_hx": {
+      "entryFile": "igmis_hx/NTAppDelegate.swift",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.20.159:8780",
+            "http://192.168.20.27:8081"
+          ],
+          "prod": [
+            "http://117.187.238.119:9180"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks"
+        ]
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    },
+    "igmis_ns": {
+      "entryFile": "igmis_ns/NTAppDelegate.swift",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.20.160:9002",
+            "http://192.168.20.55:8080"
+          ],
+          "prod": [
+            "http://58.221.238.221:8081"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks"
+        ]
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    },
+    "igmis_nt": {
+      "entryFile": "igmis_nt/NTAppDelegate.swift",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.20.160:9002",
+            "http://192.168.20.27:8080",
+            "http://192.168.20.55:8080"
+          ],
+          "prod": [
+            "http://58.221.238.221:8081"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks"
+        ]
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    },
+    "igmis_sx": {
+      "entryFile": "igmis_sx/AppDelegate.swift",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.20.158:8080",
+            "http://192.168.20.158:80"
+          ],
+          "prod": [
+            "http://112.15.96.5:8989",
+            "http://112.15.96.5:8082"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks"
+        ]
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    },
+    "igmis_xa": {
+      "entryFile": "igmis_xa/Other/AppDelegate.swift",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.20.114:8080",
+            "http://192.168.20.114:8081",
+            "http://192.168.20.114:8082",
+            "http://192.168.20.55:8005",
+            "http://192.168.20.55:8007"
+          ],
+          "prod": [
+            "http://121.40.77.29:8869",
+            "http://121.40.77.29:9088"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks"
+        ]
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    },
+    "snmis_bjsg": {
+      "entryFile": "lib/app/app.dart",
+      "environment": {
+        "preferredForAutomation": "test",
+        "activeProfileMarkers": {
+          "test": [
+            "http://192.168.100.72:10062/uia/",
+            "http://192.168.100.72:10061/snmis/",
+            "http://192.168.100.72:10060/snmis/",
+            "http://192.168.100.72:10060/snmisMobile/"
+          ],
+          "prod": [
+            "http://10.1.120.241:9180/serverUia/",
+            "http://10.1.120.241:9180/snmis/prod-api/",
+            "http://10.1.120.241:9180/snmis/",
+            "http://10.1.120.241:9180/snmisMobile/"
+          ]
+        },
+        "autoSwitchRule": {
+          "ifCurrentProfile": "prod",
+          "switchTo": "test"
+        }
+      },
+      "credentials": {
+        "sourcePriority": [
+          "remarks",
+          "local_default"
+        ],
+        "localDefault": {
+          "username": "root",
+          "password": ""
+        },
+        "note": "Fill the local default password only on your machine if remarks do not provide credentials."
+      },
+      "backendCollaboration": {
+        "mode": "frontend_first_then_ask",
+        "requiredWhenBlocked": [
+          "后端接口地址",
+          "请求参数示例",
+          "预期响应示例",
+          "鉴权方式",
+          "测试账号权限"
+        ]
+      }
+    }
+  }
+}

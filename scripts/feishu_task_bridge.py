@@ -14,13 +14,16 @@ def render_commander_message(
     status = state['status']
 
     if event == 'task_started':
-        return (
+        message = (
             f'开始处理任务\n'
             f'任务ID：{task_id}\n'
             f'标题：{title}\n'
             f'项目：{repo}\n'
             f'当前阶段：{status}'
         )
+        if note:
+            message += f'\n说明：{note}'
+        return message
 
     if event == 'awaiting_info':
         fields = '、'.join(missing_items or [])
@@ -50,6 +53,16 @@ def render_commander_message(
             f'项目：{repo}\n'
             f'当前阶段：{status}\n'
             f'说明：{note or "等待下一次处理"}'
+        )
+
+    if event == 'task_blocked':
+        return (
+            f'当前无法自动处理\n'
+            f'任务ID：{task_id}\n'
+            f'标题：{title}\n'
+            f'项目：{repo}\n'
+            f'当前阶段：{status}\n'
+            f'原因：{note or "待补充"}'
         )
 
     if event == 'blocked_backend':

@@ -34,6 +34,20 @@ def render_worker_prompt(
         location_block += f'Run directory: {run_dir}\n'
     if worktree_path is not None:
         location_block += f'Worktree path: {worktree_path}\n'
+    runtime_block = ''
+    runtime_rules = task.get('runtimeRules') or {}
+    if runtime_rules:
+        runtime_block = (
+            "Runtime guidance:\n"
+            f"- Entry file: {runtime_rules.get('entryFile')}\n"
+            f"- Current environment: {runtime_rules.get('currentEnvironment')}\n"
+            f"- Preferred environment: {runtime_rules.get('preferredEnvironment')}\n"
+            f"- Switch required: {runtime_rules.get('switchRequired')}\n"
+            f"- Credential policy: {runtime_rules.get('credentialPolicy')}\n"
+            f"- Default username: {runtime_rules.get('defaultUsername')}\n"
+            f"- Local default password present: {runtime_rules.get('hasDefaultPassword')}\n"
+            f"- Backend info needed when blocked: {runtime_rules.get('backendRequiredWhenBlocked')}\n"
+        )
     return (
         f"{template}\n\n"
         f"Task ID: {task['id']}\n"
@@ -41,6 +55,7 @@ def render_worker_prompt(
         f"Test command: {task['testCommand']}\n"
         f"Done definition: {task['doneDefinition']}\n"
         f"{location_block}"
+        f"{runtime_block}"
         f"Context:\n{context_text}\n"
     )
 

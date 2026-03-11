@@ -159,6 +159,44 @@ def write_task(run_dir: Path, task: dict) -> None:
     (run_dir / 'task.json').write_text(json.dumps(task, ensure_ascii=False, indent=2) + '\n')
 
 
+def triage_task(task: dict) -> dict:
+    if task.get('needsUserInput'):
+        return {
+            'decision': 'awaiting_info',
+            'missingItems': ['项目名'],
+        }
+
+    repo_path = task.get('repoPath', '').strip()
+    if not repo_path:
+        return {
+            'decision': 'awaiting_info',
+            'missingItems': ['项目名'],
+        }
+
+    repo_dir = Path(repo_path)
+    if not repo_dir.exists():
+        return {
+            'decision': 'blocked',
+            'reason': f'项目路径不存在：{repo_path}',
+        }
+
+    if not task.get('testCommand', '').strip():
+        return {
+            'decision': 'awaiting_info',
+            'missingItems': ['测试命令'],
+        }
+
+    decision = {
+        'decision': 'run',
+    }
+    runtime_rules = task.get('runtimeRules') or {}
+    if runtime_rules.get('switchRequired'):
+        decision['note'] = (
+            f"检测到当前为生产环境，执行前将切到 {runtime_rules.get('preferredEnvironment', 'test')}"
+        )
+    return decision
+
+
 def write_task_state(run_dir: Path, task_id: str, status: str) -> dict:
     return write_task_state_with_metadata(run_dir, task_id, status)
 

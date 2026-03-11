@@ -174,6 +174,103 @@ class TaskResumeFlowTests(unittest.TestCase):
             self.assertEqual(json.loads(timeline[-1])['status'], 'queued')
 
 
+class TaskTriageTests(unittest.TestCase):
+    def test_triages_task_as_runnable_when_repo_and_test_command_exist(self):
+        from scripts.bugfix_orchestrator import triage_task
+
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_dir = Path(tmp) / 'repo'
+            repo_dir.mkdir()
+            decision = triage_task(
+                {
+                    'id': 'bugfix-001',
+                    'sourceTaskId': 'source-001',
+                    'title': 'Fix sample bug',
+                    'repoPath': str(repo_dir),
+                    'bugDescription': 'Sample',
+                    'reproSteps': [],
+                    'expectedBehavior': 'Passes',
+                    'testCommand': 'pytest -q',
+                    'doneDefinition': ['tests pass'],
+                    'needsUserInput': False,
+                }
+            )
+
+            self.assertEqual(decision['decision'], 'run')
+            self.assertNotIn('note', decision)
+
+    def test_triages_task_as_runnable_with_switch_note_when_current_env_is_prod(self):
+        from scripts.bugfix_orchestrator import triage_task
+
+        with tempfile.TemporaryDirectory() as tmp:
+            repo_dir = Path(tmp) / 'repo'
+            repo_dir.mkdir()
+            decision = triage_task(
+                {
+                    'id': 'bugfix-001',
+                    'sourceTaskId': 'source-001',
+                    'title': 'Fix sample bug',
+                    'repoPath': str(repo_dir),
+                    'bugDescription': 'Sample',
+                    'reproSteps': [],
+                    'expectedBehavior': 'Passes',
+                    'testCommand': 'pytest -q',
+                    'doneDefinition': ['tests pass'],
+                    'needsUserInput': False,
+                    'runtimeRules': {
+                        'currentEnvironment': 'prod',
+                        'preferredEnvironment': 'test',
+                        'switchRequired': True,
+                    },
+                }
+            )
+
+            self.assertEqual(decision['decision'], 'run')
+            self.assertIn('生产环境', decision['note'])
+
+    def test_triages_task_as_awaiting_info_when_project_is_missing(self):
+        from scripts.bugfix_orchestrator import triage_task
+
+        decision = triage_task(
+            {
+                'id': 'bugfix-001',
+                'sourceTaskId': 'source-001',
+                'title': 'Fix sample bug',
+                'repoPath': '',
+                'bugDescription': 'Sample',
+                'reproSteps': [],
+                'expectedBehavior': 'Passes',
+                'testCommand': '',
+                'doneDefinition': ['tests pass'],
+                'needsUserInput': True,
+            }
+        )
+
+        self.assertEqual(decision['decision'], 'awaiting_info')
+        self.assertIn('项目名', decision['missingItems'])
+
+    def test_triages_task_as_blocked_when_repo_path_does_not_exist(self):
+        from scripts.bugfix_orchestrator import triage_task
+
+        decision = triage_task(
+            {
+                'id': 'bugfix-001',
+                'sourceTaskId': 'source-001',
+                'title': 'Fix sample bug',
+                'repoPath': '/path/does/not/exist',
+                'bugDescription': 'Sample',
+                'reproSteps': [],
+                'expectedBehavior': 'Passes',
+                'testCommand': 'pytest -q',
+                'doneDefinition': ['tests pass'],
+                'needsUserInput': False,
+            }
+        )
+
+        self.assertEqual(decision['decision'], 'blocked')
+        self.assertIn('项目路径不存在', decision['reason'])
+
+
 class QueueControlTests(unittest.TestCase):
     def test_queues_fourth_ready_run_when_capacity_is_full(self):
         from scripts.bugfix_orchestrator import initialize_task_run, maybe_queue_run
