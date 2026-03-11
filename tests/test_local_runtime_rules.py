@@ -74,6 +74,44 @@ static String baseUrl = 'http://192.168.100.72:10062/uia/';
             rules = load_local_runtime_rules(path)
             self.assertIn('snmis_bjsg', rules['projects'])
 
+    def test_applies_prod_to_test_switch_inside_workspace(self):
+        from scripts.local_runtime_rules import apply_runtime_rules_to_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            app_dir = workspace / 'lib' / 'app'
+            app_dir.mkdir(parents=True)
+            entry_file = app_dir / 'app.dart'
+            entry_file.write_text(
+                """
+// static String baseUrl = 'http://192.168.100.72:10062/uia/';
+static String baseUrl = 'http://10.1.120.241:9180/serverUia/';
+"""
+            )
+
+            task = {
+                'repoCandidate': 'snmis_bjsg',
+                'runtimeRules': {
+                    'entryFile': 'lib/app/app.dart',
+                    'currentEnvironment': 'prod',
+                    'preferredEnvironment': 'test',
+                    'switchRequired': True,
+                    'profileMarkers': {
+                        'test': ['http://192.168.100.72:10062/uia/'],
+                        'prod': ['http://10.1.120.241:9180/serverUia/'],
+                    },
+                },
+            }
+
+            updated = apply_runtime_rules_to_workspace(task, workspace)
+            content = entry_file.read_text()
+
+            self.assertIn("http://192.168.100.72:10062/uia/", content)
+            self.assertNotIn("static String baseUrl = 'http://10.1.120.241:9180/serverUia/';", content)
+            self.assertIn("// static String baseUrl = 'http://192.168.100.72:10062/uia/';", content)
+            self.assertEqual(updated['currentEnvironment'], 'test')
+            self.assertTrue(updated['switchPerformed'])
+
 
 if __name__ == '__main__':
     unittest.main()

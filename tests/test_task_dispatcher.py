@@ -27,11 +27,23 @@ class TaskDispatcherTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             base_dir = Path(tmp)
             task = self.build_task()
+            task['runtimeRules'] = {
+                'entryFile': 'lib/app/app.dart',
+                'currentEnvironment': 'prod',
+                'preferredEnvironment': 'test',
+                'switchRequired': True,
+                'profileMarkers': {
+                    'test': ['http://192.168.100.72:10062/uia/'],
+                    'prod': ['http://10.1.120.241:9180/serverUia/'],
+                },
+            }
             run_dir = initialize_task_run(base_dir, task, 'extra context')
 
             def fake_prepare(run_dir, task):
                 workspace = run_dir / 'workspace'
-                workspace.mkdir()
+                app_dir = workspace / 'lib' / 'app'
+                app_dir.mkdir(parents=True)
+                (app_dir / 'app.dart').write_text("static String baseUrl = 'http://10.1.120.241:9180/serverUia/';\n")
                 return workspace
 
             def fake_worker(run_dir, task, context_text, worktree_path):
@@ -68,8 +80,11 @@ class TaskDispatcherTests(unittest.TestCase):
             )
 
             state = json.loads((run_dir / 'state.json').read_text())
+            updated_task = json.loads((run_dir / 'task.json').read_text())
             self.assertEqual(result['status'], 'done')
             self.assertEqual(state['status'], 'done')
+            self.assertEqual(updated_task['runtimeRules']['currentEnvironment'], 'test')
+            self.assertTrue(updated_task['runtimeRules']['switchPerformed'])
             self.assertEqual(notifications, [('bugfix-001', 'done')])
 
     def test_dispatches_retryable_worker_outcome_to_coder_retrying(self):
@@ -235,6 +250,31 @@ class TaskDispatcherTests(unittest.TestCase):
             self.assertTrue((workspace / 'lib' / 'a.dart').exists())
             self.assertFalse((workspace / '.svn').exists())
 
+    def test_prepares_copy_workspace_ignores_dangling_symlinks(self):
+        from scripts.task_dispatcher import prepare_task_workspace
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            repo = root / 'repo'
+            (repo / 'ios' / '.symlinks' / 'plugins').mkdir(parents=True)
+            (repo / 'lib').mkdir()
+            (repo / 'lib' / 'a.dart').write_text('ok')
+            broken_link = repo / 'ios' / '.symlinks' / 'plugins' / 'broken_plugin'
+            broken_link.symlink_to('/path/does/not/exist')
+            run_dir = root / 'run'
+            run_dir.mkdir()
+
+            workspace = prepare_task_workspace(
+                run_dir,
+                {
+                    'id': 'bugfix-001',
+                    'repoPath': str(repo),
+                },
+            )
+
+            self.assertTrue(workspace.exists())
+            self.assertTrue((workspace / 'lib' / 'a.dart').exists())
+
     def test_main_prints_json_result(self):
         from scripts.bugfix_orchestrator import initialize_task_run
         from scripts.task_dispatcher import main
@@ -320,6 +360,42 @@ class TaskDispatcherTests(unittest.TestCase):
             result = json.loads(stdout.getvalue())
             self.assertEqual(exit_code, 0)
             self.assertEqual(result['status'], 'done')
+
+    def test_marks_run_needs_human_when_switch_configuration_is_incomplete(self):
+        from scripts.bugfix_orchestrator import initialize_task_run
+        from scripts.task_dispatcher import dispatch_once
+
+        with tempfile.TemporaryDirectory() as tmp:
+            base_dir = Path(tmp)
+            task = self.build_task()
+            task['runtimeRules'] = {
+                'entryFile': 'lib/app/app.dart',
+                'currentEnvironment': 'prod',
+                'preferredEnvironment': 'test',
+                'switchRequired': True,
+                'profileMarkers': {
+                    'test': ['http://192.168.100.72:10062/uia/'],
+                    'prod': [],
+                },
+            }
+            run_dir = initialize_task_run(base_dir, task, 'extra context')
+
+            def fake_prepare(run_dir, task):
+                workspace = run_dir / 'workspace'
+                app_dir = workspace / 'lib' / 'app'
+                app_dir.mkdir(parents=True)
+                (app_dir / 'app.dart').write_text("static String baseUrl = 'http://10.1.120.241:9180/serverUia/';\n")
+                return workspace
+
+            result = dispatch_once(
+                base_dir,
+                workspace_preparer=fake_prepare,
+            )
+
+            state = json.loads((run_dir / 'state.json').read_text())
+            self.assertEqual(result['status'], 'needs_human')
+            self.assertEqual(state['status'], 'needs_human')
+            self.assertIn('switchReason', state)
 
 
 if __name__ == '__main__':

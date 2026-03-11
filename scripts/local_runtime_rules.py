@@ -68,3 +68,39 @@ def enrich_task_with_runtime_rules(task: dict, rules: dict) -> dict:
     enriched = dict(task)
     enriched['runtimeRules'] = runtime_rules
     return enriched
+
+
+def apply_runtime_rules_to_workspace(task: dict, workspace_path: Path) -> dict:
+    runtime_rules = dict(task.get('runtimeRules') or {})
+    if not runtime_rules.get('switchRequired'):
+        runtime_rules['switchPerformed'] = False
+        return runtime_rules
+
+    entry_file = runtime_rules.get('entryFile')
+    markers = runtime_rules.get('profileMarkers') or {}
+    current_environment = runtime_rules.get('currentEnvironment')
+    preferred_environment = runtime_rules.get('preferredEnvironment')
+    source_markers = markers.get(current_environment) or []
+    target_markers = markers.get(preferred_environment) or []
+
+    if not entry_file or not source_markers or not target_markers or len(source_markers) != len(target_markers):
+        raise ValueError('Automatic environment switching is not fully configured')
+
+    path = workspace_path / entry_file
+    content = path.read_text().splitlines()
+    updated_lines = []
+    for line in content:
+        stripped = line.lstrip()
+        if stripped.startswith('//'):
+            updated_lines.append(line)
+            continue
+        updated = line
+        for source, target in zip(source_markers, target_markers):
+            updated = updated.replace(source, target)
+        updated_lines.append(updated)
+
+    path.write_text('\n'.join(updated_lines) + '\n')
+    runtime_rules['currentEnvironment'] = preferred_environment
+    runtime_rules['switchRequired'] = False
+    runtime_rules['switchPerformed'] = True
+    return runtime_rules

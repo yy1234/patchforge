@@ -18,6 +18,8 @@ from scripts.bugfix_orchestrator import (
 from scripts.codex_worker import classify_worker_run, execute_codex_worker
 from scripts.feishu_notifier import send_feishu_message
 from scripts.feishu_task_bridge import render_commander_message
+from scripts.local_runtime_rules import apply_runtime_rules_to_workspace
+from scripts.bugfix_orchestrator import write_task
 
 RUNNABLE_STATUSES = {'created', 'coder_retrying', 'review_retry'}
 
@@ -48,7 +50,13 @@ def prepare_task_workspace(
         )
         return workspace_path
 
-    shutil.copytree(repo_path, workspace_path, ignore=_copy_ignore)
+    shutil.copytree(
+        repo_path,
+        workspace_path,
+        ignore=_copy_ignore,
+        symlinks=True,
+        ignore_dangling_symlinks=True,
+    )
     return workspace_path
 
 
@@ -151,11 +159,30 @@ def dispatch_once(
     task = read_task(run_dir)
     state = read_task_state(run_dir)
     workspace_path = workspace_preparer(run_dir, task)
+    if task.get('runtimeRules'):
+        try:
+            task['runtimeRules'] = apply_runtime_rules_to_workspace(task, workspace_path)
+            write_task(run_dir, task)
+        except ValueError as err:
+            final_state = _write_status(
+                run_dir,
+                task,
+                'needs_human',
+                metadata={
+                    'sessionId': state.get('sessionId'),
+                    'sourceTaskId': task.get('sourceTaskId'),
+                    'workspacePath': str(workspace_path),
+                    'switchReason': str(err),
+                },
+            )
+            return final_state
     metadata = {
         'sessionId': state.get('sessionId'),
         'sourceTaskId': task.get('sourceTaskId'),
         'workspacePath': str(workspace_path),
     }
+    if task.get('runtimeRules', {}).get('switchPerformed'):
+        metadata['environmentSwitchedTo'] = task['runtimeRules'].get('currentEnvironment')
     _write_status(run_dir, task, 'running_coder', metadata=metadata)
 
     worker_result = worker_runner(
